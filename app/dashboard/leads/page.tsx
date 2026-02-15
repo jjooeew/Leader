@@ -1,6 +1,8 @@
 import { toggleLeadStatus } from "@/lib/actions";
 import { db } from "@/lib/firebaseAdmin";
 
+export const dynamic = 'force-dynamic';
+
 export default async function LeadsPage() {
   // Fetch leads from Firestore
   const snapshot = await db
