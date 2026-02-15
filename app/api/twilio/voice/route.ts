@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { twilioClient, TWILIO_NUMBER } from "@/lib/twilio";
-import { db } from "@/lib/firebaseAdmin";
+import { getDb } from "@/lib/firebaseAdmin";
 
 export async function POST(req: Request) {
+  const db = getDb();
   try {
     const formData = await req.formData();
     const customerPhone = String(formData.get("From") || ""); // The person calling

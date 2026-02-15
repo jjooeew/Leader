@@ -1,14 +1,12 @@
 import { toggleLeadStatus } from "@/lib/actions";
-import { db } from "@/lib/firebaseAdmin";
+import { getDb } from "@/lib/firebaseAdmin";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export default async function LeadsPage() {
+export default async function Page() {
   // Fetch leads from Firestore
-  const snapshot = await db
-    .collection("leads")
-    .orderBy("createdAt", "desc")
-    .get();
+  const db = getDb(); // Get the initialized db instance
+  const snapshot = await db.collection("leads").get();
   const leads = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
   return (

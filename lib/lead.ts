@@ -1,7 +1,9 @@
-import { db, admin } from "./firebaseAdmin";
+import { getDb } from "./firebaseAdmin";
 import { twilioClient, TWILIO_NUMBER } from "./twilio";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function notifyTradie(clientId: string, text: string) {
+  const db = getDb();
   const clientSnap = await db.collection("clients").doc(clientId).get();
   if (!clientSnap.exists) throw new Error("Client not found");
 
@@ -30,7 +32,8 @@ export async function createLead(params: {
   urgency?: string;
   priority?: "hot" | "warm" | "cold";
 }) {
-  const now = admin.firestore.Timestamp.now();
+  const db = getDb()
+  const now = FieldValue.serverTimestamp();
 
   const leadRef = await db.collection("leads").add({
     clientId: params.clientId,
