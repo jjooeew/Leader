@@ -1,12 +1,16 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-// 1. Setup the "Sanitizer" for the Private Key
-const privateKey = process.env.FIREBASE_PRIVATE_KEY
-  ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+// 1. Setup the "Universal" Sanitizer
+const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+
+const privateKey = rawKey 
+  ? (rawKey.startsWith('-----') 
+      ? rawKey.replace(/\\n/g, '\n') // Handle raw PEM format
+      : Buffer.from(rawKey, 'base64').toString('ascii')) // Handle Base64 format
   : undefined;
 
-// 2. The initialization function (Safe for Next.js builds)
+// 2. The initialization function
 function getAdminApp() {
   if (!getApps().length) {
     if (!privateKey) {
@@ -23,7 +27,7 @@ function getAdminApp() {
   }
 }
 
-// 3. Export a way to get the database that works everywhere
+// 3. Export the DB getter
 export const getDb = () => {
   getAdminApp();
   return getFirestore();
