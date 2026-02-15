@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { db, admin } from "@/lib/firebaseAdmin";
+import { getDb } from "@/lib/firebaseAdmin";
 import { createLead, notifyTradie } from "@/lib/lead";
 
 export async function POST(req: Request) {
+  const db = getDb();
   try {
     const formData = await req.formData();
     const customerPhone = String(formData.get("From") || "");
