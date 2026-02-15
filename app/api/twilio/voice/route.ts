@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     // For V1, we will just play a message and hang up, or you can forward it.
     const twiml = `
       <Response>
-        <Say>Hi, thanks for calling. We can't take your call right now, but we just sent you a text message to start your booking.</Say>
+        <Say>Hey buddy. We can't take your call right now, but we sent you a text message to start your booking.</Say>
         <Hangup />
       </Response>
     `;
