@@ -14,42 +14,42 @@ interface LeadDetailProps {
   }>;
 }
 
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    text: "Hi, I need a quote for a deck repair in Grey Lynn.",
-    sender: "lead",
-    createdAt: "...",
-  },
-  {
-    id: "2",
-    text: "No worries! Do you have any photos of the damage?",
-    sender: "user",
-    createdAt: "...",
-  },
-  {
-    id: "3",
-    text: "Just sent them through now.",
-    sender: "lead",
-    createdAt: "...",
-  },
-];
-
 export default async function LeadDetail({ params }: LeadDetailProps) {
   const { id } = await params;
 
   const db = getDb();
-  const doc = await db.collection("leads").doc(id).get();
 
-  if (!doc.exists) return notFound();
+  const leadDoc = await db.collection("leads").doc(id).get();
+  if (!leadDoc.exists) return notFound();
 
-  const data = doc.data();
+  // 1. Fetch lead data
+  const leadData = leadDoc.data();
   const lead = {
-    ...data,
-    id: doc.id,
+    ...leadData,
+    id: leadDoc.id,
     createdAt:
-      data?.createdAt?.toDate?.().toISOString() || new Date().toISOString(),
+      leadData?.createdAt?.toDate?.().toISOString() || new Date().toISOString(),
   } as Lead;
+
+  // 2. Fetch Messages Sub-collection
+  // We order by 'createdAt' so the conversation reads top-to-bottom
+  const messagesSnapshot = await db
+    .collection("leads")
+    .doc(id)
+    .collection("messages")
+    .orderBy("createdAt", "asc")
+    .get();
+
+  // 3. Map Firestore docs to your Message type
+  const messages = messagesSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+    // Convert Firestore Timestamp to string for the Client Component
+    createdAt:
+      doc.data().createdAt?.toDate?.().toISOString() ||
+      new Date().toISOString(),
+  })) as Message[];
+
   return (
     <div className="h-screen bg-slate-50 font-sans pb-24">
       {/* Header */}
@@ -109,7 +109,7 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
 
         {/* Chat Section */}
 
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
             <MessageSquare size={16} />
             <span className="text-[10px] font-black uppercase tracking-widest">
@@ -118,6 +118,20 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
           </div>
           <MessageThread messages={mockMessages} />
           <MessageInput />
+        </div> */}
+        <div className="mt-8">
+          <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
+            <MessageSquare size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">
+              Chat History
+            </span>
+          </div>
+          
+          {/* 5. Pass real messages to the thread */}
+          <MessageThread messages={messages} />
+          
+          {/* 6. Pass leadId to the input so it knows where to save new messages */}
+          <MessageInput leadId={id} />
         </div>
       </div>
     </div>

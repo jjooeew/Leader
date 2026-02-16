@@ -1,16 +1,25 @@
 "use client";
 
+import { sendMessage } from "@/lib/actions";
 import { Send } from "lucide-react";
 import { useState } from "react";
 
-export function MessageInput() {
+export function MessageInput({ leadId }: { leadId: string }) {
   const [text, setText] = useState("");
+  // const [isSending, setIsSending] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!text.trim()) return;
-    console.log("Sending:", text); // We'll hook this to a Server Action later
-    setText("");
+    const result = await sendMessage(leadId, text);    setText("");
+  
+    if (result.success) {
+      setText(""); // Clear the input on success
+    } else {
+      alert("Failed to send message. Check console.");
+    }
   };
+
+
 
   return (
     <div className="flex gap-2 ">
@@ -22,7 +31,7 @@ export function MessageInput() {
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
       />
-      <button 
+      <button
         onClick={handleSend}
         className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition-colors"
       >

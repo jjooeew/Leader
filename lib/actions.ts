@@ -22,3 +22,28 @@ export async function updateLeadStatus(leadId: string, newStatus: string) {
     return { success: false };
   }
 }
+
+export async function sendMessage(leadId: string, text: string) {
+  const db = getDb();
+  
+  try {
+
+    console.log(`Attempting to send message to lead: ${leadId}`)
+    await db
+      .collection("leads")
+      .doc(leadId)
+      .collection("messages")
+      .add({
+        text,
+        sender: "user", // The tradie is the one sending from the app
+        createdAt: new Date(), // Firestore Admin handles this as a Timestamp
+      });
+
+    revalidatePath(`/dashboard/leads/${leadId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error sending message:", error);
+    return { success: false };
+  }
+}
+
