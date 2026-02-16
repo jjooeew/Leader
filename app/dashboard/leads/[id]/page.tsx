@@ -5,11 +5,14 @@ import { Phone, MessageSquare, MapPin, Clock, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function LeadDetail(props: {
-  params: Promise<{ id: string }>;
-}) {
-  const params = await props.params;
-  const id = params.id;
+interface LeadDetailProps {
+  params: Promise<{ 
+    id: string;
+  }>;
+}
+
+export default async function LeadDetail({ params }: LeadDetailProps) {
+  const { id } = await params;
 
   const db = getDb();
   const doc = await db.collection("leads").doc(id).get();
