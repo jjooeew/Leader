@@ -1,6 +1,6 @@
 import { toggleLeadStatus } from "@/lib/actions";
 import { getDb } from "@/lib/firebaseAdmin";
-import { LeadCard } from "@/components/leads/LeadCard.";
+import { LeadCard } from "@/components/leads/LeadCard";
 import { Lead } from "@/app/types";
 
 export const dynamic = "force-dynamic";
