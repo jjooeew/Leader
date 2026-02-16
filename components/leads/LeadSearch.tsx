@@ -17,8 +17,8 @@ export default function LeadSearch() {
       params.delete("q");
     }
     // Updates the URL without a full page reload
-    replace(`${pathname}?${params.toString()}`);
-  }, 300); // 300ms delay
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, 300);
 
   return (
     <div className="relative">
