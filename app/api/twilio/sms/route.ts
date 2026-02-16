@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       clientId,
       source: "sms_reply",
       customerPhoneE164: customerPhone,
-      jobSummary: messageBody,
+      rawText: messageBody,
     });
 
     // 3. Notify the Tradie (Send a text to their personal phone)
