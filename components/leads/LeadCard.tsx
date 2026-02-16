@@ -65,7 +65,7 @@ export const LeadCard = ({ lead, children }: LeadCardProps) => {
             {lead.suburb || "Location TBC"}
           </span>
         </div>
-        <div className="flex items-center gap-2">{children}</div>
+        <div className="flex items-center gap-2 z-50">{children}</div>
       </div>
     </div>
   );
