@@ -4,7 +4,7 @@ import { Message } from "@/app/types"; // Assuming you add the interface there
 
 export function MessageThread({ messages }: { messages: Message[] }) {
   return (
-    <div className="flex flex-col gap-4 p-4 h-100 overflow-y-auto bg-slate-50 rounded-2xl border border-slate-100">
+    <div className="flex flex-col gap-4 p-4 h-80 overflow-y-auto bg-slate-50 rounded-2xl border border-slate-100">
       {messages.map((msg) => {
         const isLead = msg.sender === "lead";
         

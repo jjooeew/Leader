@@ -51,7 +51,7 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
       data?.createdAt?.toDate?.().toISOString() || new Date().toISOString(),
   } as Lead;
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24">
+    <div className="h-screen bg-slate-50 font-sans pb-24">
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-10 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -107,33 +107,19 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
           </div>
         </div>
 
-        {/* Chat History Section */}
+        {/* Chat Section */}
 
         <div className="mt-8">
-      <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
-          <MessageSquare size={16} />
-          <span className="text-[10px] font-black uppercase tracking-widest">
-            Chat History
-          </span>
-        </div>
+          <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
+            <MessageSquare size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">
+              Chat History
+            </span>
+          </div>
           <MessageThread messages={mockMessages} />
           <MessageInput />
         </div>
       </div>
-
-      {/* Footer Input Placeholder */}
-      {/* <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
-        <div className="max-w-2xl mx-auto flex gap-2">
-          <input
-            type="text"
-            placeholder="Send an SMS..."
-            className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500"
-          />
-          <button className="bg-blue-600 text-white p-3 rounded-xl shadow-lg shadow-blue-200">
-            <MessageSquare size={20} />
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 }
