@@ -1,69 +1,52 @@
 import { toggleLeadStatus } from "@/lib/actions";
 import { getDb } from "@/lib/firebaseAdmin";
+import { LeadCard } from "@/components/leads/LeadCard.";
+import { Lead } from "@/app/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  // Fetch leads from Firestore
-  const db = getDb(); // Get the initialized db instance
-  const snapshot = await db.collection("leads").get();
-  const leads = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  const db = getDb();
+  // Fetch and cast to your Lead type
+  const snapshot = await db.collection("leads").orderBy("createdAt", "desc").get();
+  const leads = snapshot.docs.map((doc) => ({ 
+    id: doc.id, 
+    ...doc.data() 
+  })) as Lead[];
 
   return (
-    <div className="p-8 font-sans">
-      <h1 className="text-2xl font-bold mb-6">Lead Inbox</h1>
-      <div className="grid gap-4">
-        {leads.map((lead: any) => (
-          <div
-            key={lead.id}
-            className="border p-4 rounded-lg shadow-sm bg-white"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-bold text-lg">{lead.customerPhoneE164}</p>
-                <p className="text-gray-600">{lead.jobSummary}</p>
-              </div>
-              <span
-                className={`px-2 py-1 rounded text-xs font-bold ${
-                  lead.priority === "hot"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-blue-100 text-blue-700"
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+      <h1 className="text-2xl font-bold mb-6 text-slate-900">Lead Inbox</h1>
+      
+      <div className="max-w-2xl mx-auto grid gap-4">
+        {leads.map((lead) => (
+          <LeadCard key={lead.id} lead={lead}>
+            {/* These buttons are passed into the 'children' slot of the LeadCard */}
+            <form
+              action={async () => {
+                "use server";
+                await toggleLeadStatus(lead.id, lead.status);
+              }}
+            >
+              <button
+                className={`text-[11px] font-bold uppercase tracking-tight px-3 py-1.5 rounded-lg border transition ${
+                  lead.status === "contacted"
+                    ? "bg-slate-100 text-slate-500 border-slate-200"
+                    : "bg-white text-blue-600 border-blue-200 hover:bg-blue-50"
                 }`}
               >
-                {lead.status.toUpperCase()}
-              </span>
-            </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Received: {lead.createdAt?.toDate().toLocaleString()}
-            </p>
-            <div className="mt-4 flex gap-2">
-              <form
-                action={async () => {
-                  "use server";
-                  await toggleLeadStatus(lead.id, lead.status);
-                }}
-              >
-                <button
-                  className={`text-sm px-3 py-1 rounded transition ${
-                    lead.status === "contacted"
-                      ? "bg-gray-200 text-gray-700 hover:bg-gray-300" // Looks like an "Undo" button
-                      : "bg-blue-600 text-white hover:bg-blue-700" // Looks like an "Action" button
-                  }`}
-                >
-                  {lead.status === "contacted"
-                    ? "← Mark as New"
-                    : "Mark Contacted"}
-                </button>
-              </form>
+                {lead.status === "contacted" ? "Undo" : "Done"}
+              </button>
+            </form>
 
-              <a
-                href={`tel:${lead.customerPhoneE164}`}
-                className="text-sm border border-gray-300 px-3 py-1 rounded hover:bg-gray-50"
-              >
-                Call Customer
-              </a>
-            </div>
-          </div>
+            <a
+              href={`tel:${lead.customerPhoneE164}`}
+              className="text-[11px] font-bold uppercase tracking-tight bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700"
+            >
+              Call
+            </a>
+          </LeadCard>
         ))}
       </div>
     </div>
