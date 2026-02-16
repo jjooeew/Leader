@@ -28,12 +28,6 @@ export async function notifyTradie(clientId: string, text: string) {
   const client = clientSnap.data() as any;
   if (!client.notifyPhoneE164) return;
 
-  console.log("------------------------------------------");
-  console.log("📢 TRADIE NOTIFICATION TRIGGERED");
-  console.log("TO:", client.notifyPhoneE164);
-  console.log("BODY:", text);
-  console.log("------------------------------------------");
-
   await twilioClient.messages.create({
     from: TWILIO_NUMBER,
     to: client.notifyPhoneE164,
@@ -49,6 +43,7 @@ export async function createLead(params: {
   jobSummary?: string;
   suburb?: string;
   priority?: "hot" | "warm" | "cold";
+  customerName?:string;
 }) {
   const db = getDb()
   const now = FieldValue.serverTimestamp();

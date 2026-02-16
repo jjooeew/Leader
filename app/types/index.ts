@@ -1,6 +1,7 @@
 export interface Lead {
   id: string;
   clientId: string;
+  customerName?: string;
   source: string;
   status: 'new' | 'contacted' | 'booked' | 'won' | 'lost';
   priority: 'hot' | 'warm' | 'cold';
@@ -8,5 +9,6 @@ export interface Lead {
   jobSummary: string | null;
   suburb: string | null;
   urgency: string;
-  createdAt: any; // Firestore Timestamp
+  createdAt: string | any; // Firestore Timestamp
+  lastMessageAt: string | any;
 }

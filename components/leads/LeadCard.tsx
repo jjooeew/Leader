@@ -2,6 +2,7 @@ import React from "react";
 import { Flame, MapPin, Clock, Phone } from "lucide-react";
 import { Lead } from "@/app/types";
 import { formatTimeAgo } from "@/lib/utils";
+import { CardActions } from "./CardActions";
 
 const STATUS_STYLES = {
   new: "bg-blue-50 text-blue-700 border-blue-100",
@@ -64,8 +65,6 @@ export const LeadCard = ({ lead, children }: LeadCardProps) => {
             {lead.suburb || "Location TBC"}
           </span>
         </div>
-
-        {/* The buttons will be injected here from the page */}
         <div className="flex items-center gap-2">{children}</div>
       </div>
     </div>
