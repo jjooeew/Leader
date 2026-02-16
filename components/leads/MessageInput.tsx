@@ -13,7 +13,7 @@ export function MessageInput() {
   };
 
   return (
-    <div className="mt-2 flex gap-2 ">
+    <div className="flex gap-2 ">
       <input
         type="text"
         placeholder="Type a message..."
