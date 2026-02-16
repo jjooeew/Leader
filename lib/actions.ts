@@ -1,15 +1,24 @@
 "use server";
-import { getDb } from "@/lib/firebaseAdmin";
+
+import { getDb } from "./firebaseAdmin";
 import { revalidatePath } from "next/cache";
 
-export async function toggleLeadStatus(leadId: string, currentStatus: string) {
+export async function updateLeadStatus(leadId: string, newStatus: string) {
   const db = getDb();
-  const nextStatus = currentStatus === "new" ? "contacted" : "new";
+  
+  try {
+    await db.collection("leads").doc(leadId).update({
+      status: newStatus,
+      updatedAt: new Date(),
+    });
 
-  await db.collection("leads").doc(leadId).update({
-    status: nextStatus,
-  });
-
-  // This tells Next.js to refresh the dashboard data
-  revalidatePath("/dashboard/leads");
+    // This clears the cache so the dashboard and detail page show the new status immediately
+    revalidatePath(`/dashboard/leads`);
+    revalidatePath(`/dashboard/leads/${leadId}`);
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update status:", error);
+    return { success: false };
+  }
 }

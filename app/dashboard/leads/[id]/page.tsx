@@ -1,15 +1,39 @@
 import { getDb } from "@/lib/firebaseAdmin";
-import { Lead } from "@/app/types";
+import { Lead, Message } from "@/app/types";
 import { formatTimeAgo } from "@/lib/utils";
 import { Phone, MessageSquare, MapPin, Clock, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { StatusPicker } from "@/components/leads/StatusPicker";
+import { MessageThread } from "@/components/leads/MessageThread";
+import { MessageInput } from "@/components/leads/MessageInput";
 
 interface LeadDetailProps {
-  params: Promise<{ 
+  params: Promise<{
     id: string;
   }>;
 }
+
+const mockMessages: Message[] = [
+  {
+    id: "1",
+    text: "Hi, I need a quote for a deck repair in Grey Lynn.",
+    sender: "lead",
+    createdAt: "...",
+  },
+  {
+    id: "2",
+    text: "No worries! Do you have any photos of the damage?",
+    sender: "user",
+    createdAt: "...",
+  },
+  {
+    id: "3",
+    text: "Just sent them through now.",
+    sender: "lead",
+    createdAt: "...",
+  },
+];
 
 export default async function LeadDetail({ params }: LeadDetailProps) {
   const { id } = await params;
@@ -60,9 +84,7 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">
             Current Status
           </span>
-          <div className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-sm font-bold border border-blue-100 uppercase">
-            {lead.status}
-          </div>
+          <StatusPicker leadId={id} currentStatus={lead.status} />
         </div>
 
         {/* Inquiry Details Card */}
@@ -86,24 +108,21 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
         </div>
 
         {/* Chat History Section */}
-        <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
+
+        <div className="mt-8">
+      <div className="pt-4 flex items-center gap-2 text-slate-400 mb-2">
           <MessageSquare size={16} />
           <span className="text-[10px] font-black uppercase tracking-widest">
             Chat History
           </span>
         </div>
-
-        {/* Message Bubble (Mock) */}
-        <div className="bg-slate-100 p-4 rounded-2xl rounded-bl-none max-w-[85%] text-sm text-slate-700 leading-relaxed">
-          {lead.jobSummary}
-          <div className="text-[9px] text-slate-400 mt-2 font-bold uppercase tracking-tighter">
-            10:15 AM
-          </div>
+          <MessageThread messages={mockMessages} />
+          <MessageInput />
         </div>
       </div>
 
       {/* Footer Input Placeholder */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
         <div className="max-w-2xl mx-auto flex gap-2">
           <input
             type="text"
@@ -114,7 +133,7 @@ export default async function LeadDetail({ params }: LeadDetailProps) {
             <MessageSquare size={20} />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

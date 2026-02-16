@@ -12,3 +12,10 @@ export interface Lead {
   createdAt: string | any; // Firestore Timestamp
   lastMessageAt: string | any;
 }
+
+export interface Message {
+  id: string;
+  text: string;
+  sender: "lead" | "user"; // 'lead' is the customer, 'user' is the tradie
+  createdAt: string;
+}

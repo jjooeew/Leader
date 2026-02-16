@@ -1,10 +1,11 @@
-import { toggleLeadStatus } from "@/lib/actions";
+import { updateLeadStatus } from "@/lib/actions";
 import { getDb } from "@/lib/firebaseAdmin";
 import { LeadCard } from "@/components/leads/LeadCard";
 import { Lead } from "@/app/types";
 import Link from "next/link";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import LeadSearch from "@/components/leads/LeadSearch";
+import { Navbar } from "@/components/layout/Navbar";
 
 export const dynamic = "force-dynamic";
 
@@ -51,17 +52,21 @@ export default async function Page({ searchParams }: DashboardProps) {
     }) as Lead[];
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
-      <h1 className="text-2xl font-bold mb-6 text-slate-900">Lead Inbox</h1>
+    <div className="min-h-screen bg-slate-50 font-sans p-4">
+      <Navbar />
+
+      <div className="mt-4 max-w-2xl mx-auto mb-6">
+        <h1 className="text-2xl font-bold mb-6 text-slate-900 ">Lead Inbox</h1>
+      </div>
 
       {/* 1. Search Bar */}
       <div className="max-w-2xl mx-auto mb-6">
-          <LeadSearch />
+        <LeadSearch />
       </div>
 
       {/* 2. Filter Pills */}
       <div className="max-w-2xl mx-auto flex gap-2 overflow-x-auto pb-4 no-scrollbar">
-        {["all", "new", "hot", "booked", "won"].map((s) => (
+        {["all", "contacted", "quoted", "booked", "lost"].map((s) => (
           <Link
             key={s}
             href={`/dashboard/leads?status=${s}${searchQuery ? `&q=${searchQuery}` : ""}`}
@@ -89,7 +94,7 @@ export default async function Page({ searchParams }: DashboardProps) {
                 <form
                   action={async () => {
                     "use server";
-                    await toggleLeadStatus(lead.id, lead.status);
+                    await updateLeadStatus(lead.id, lead.status);
                   }}
                 >
                   <button
