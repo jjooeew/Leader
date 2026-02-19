@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     // 1. Search for the most recent 'new' lead for this phone number
     const latestLeadSnap = await db.collection("leads")
       .where("customerPhoneE164", "==", customerPhone)
-      .where("status", "==", "new")
+      .where("status", "in", ["new", "active"])
       .orderBy("createdAt", "desc")
       .limit(1)
       .get();
