@@ -97,7 +97,7 @@ export default async function Page({ searchParams }: DashboardProps) {
                     await updateLeadStatus(lead.id, lead.status);
                   }}
                 >
-                  <button
+                  {/* <button
                     className={`text-[11px] font-bold uppercase tracking-tight px-3 py-1.5 rounded-lg border transition ${
                       lead.status === "contacted"
                         ? "bg-slate-100 text-slate-500 border-slate-200"
@@ -105,7 +105,7 @@ export default async function Page({ searchParams }: DashboardProps) {
                     }`}
                   >
                     {lead.status === "contacted" ? "Undo" : "Done"}
-                  </button>
+                  </button> */}
                 </form>
 
                 <a

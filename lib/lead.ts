@@ -35,6 +35,26 @@ export async function notifyTradie(clientId: string, text: string) {
   });
 }
 
+export async function updateLeadWithReply(leadId: string, rawText: string) {
+  const db = getDb();
+  const now = FieldValue.serverTimestamp();
+
+  const detectedSuburb = extractSuburb(rawText);
+  const detectedPriority = determinePriority(rawText);
+
+  // Update the existing lead document with the extracted info
+  await db.collection("leads").doc(leadId).update({
+    jobSummary: rawText,
+    suburb: detectedSuburb,
+    priority: detectedPriority,
+    urgency: detectedPriority === 'hot' ? "URGENT" : "normal",
+    source: "sms_reply", // Update source since they actually replied now
+    lastMessageAt: now,
+    updatedAt: now,
+    status: "active" 
+  });
+}
+
 export async function createLead(params: {
   clientId: string;
   source: string;
