@@ -12,7 +12,7 @@ export function MessageInput({ leadId }: { leadId: string }) {
     if (!text.trim()) return;
     const result = await sendMessage(leadId, text);    setText("");
   
-    if (result.success) {
+    if (result?.success) {
       setText(""); // Clear the input on success
     } else {
       alert("Failed to send message. Check console.");
