@@ -15,7 +15,7 @@ export function Navbar() {
               <CheckCircle2 className="text-white" size={20} strokeWidth={2.5} />
             </div>
             <span className="text-xl font-bold text-slate-900 tracking-tight">
-              LeadFlow
+              Leader
             </span>
           </Link>
 
